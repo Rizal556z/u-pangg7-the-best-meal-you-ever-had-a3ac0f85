@@ -20,6 +20,12 @@ def main() -> None:
     text = SENTENCE.strip()
     if not (1 <= len(text) <= MAX_LEN):
         raise SystemExit(f"entry must be 1-{MAX_LEN} chars, got {len(text)}")
+    # Single-sentence guard: exactly one terminal period, no other
+    # sentence terminators inside the text.
+    if text.count(".") != 1 or not text.endswith("."):
+        raise SystemExit("entry must be exactly one sentence")
+    if any(c in text[:-1] for c in ".!?"):
+        raise SystemExit("entry must be exactly one sentence")
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8") as f:
         f.write(text)
